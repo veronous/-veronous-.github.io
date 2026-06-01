@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ExamPath — CBSE Student Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8edf5;
+    --muted: #6b7a99;
+    --accent1: #4f8ef7;
+    --accent2: #f7c948;
+    --accent3: #3ddba0;
+    --accent4: #f76b8a;
+    --accent5: #b06af7;
+    --glow1: rgba(79,142,247,0.15);
+    --glow2: rgba(247,201,72,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BG grid */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(79,142,247,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,142,247,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glow orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb1 { width: 500px; height: 500px; background: var(--accent1); top: -150px; right: -100px; }
+  .orb2 { width: 400px; height: 400px; background: var(--accent5); bottom: -100px; left: -100px; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(10,14,26,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.03em;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .logo span { color: var(--accent1); }
+  .logo-badge {
+    font-size: 0.6rem;
+    background: var(--accent2);
+    color: #0a0e1a;
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+
+  .nav-links {
+    display: flex; gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent1);
+    color: #fff;
+    border: none;
+    padding: 0.55rem 1.3rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2.5rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(79,142,247,0.1);
+    border: 1px solid rgba(79,142,247,0.25);
+    color: var(--accent1);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.04em;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.2rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.25rem;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--accent1), var(--accent5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    max-width: 580px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-search {
+    display: flex;
+    max-width: 520px;
+    margin: 0 auto 3rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    animation: fadeUp 0.6s 0.3s ease both;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .hero-search:focus-within {
+    border-color: rgba(79,142,247,0.4);
+    box-shadow: 0 0 0 3px rgba(79,142,247,0.1);
+  }
+  .hero-search input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0.9rem 1.2rem;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+  }
+  .hero-search input::placeholder { color: var(--muted); }
+  .hero-search button {
+    background: var(--accent1);
+    border: none;
+    padding: 0.9rem 1.4rem;
+    color: #fff;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: opacity 0.2s;
+  }
+  .hero-search button:hover { opacity: 0.85; }
+
+  /* STATS */
+  .stats-row {
+    display: flex; justify-content: center; gap: 3rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .stat-num span { color: var(--accent1); }
+  .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* FILTER TABS */
+  .section {
+    position: relative; z-index: 1;
+    max-width: 1200px;
+    margin: 4rem auto 0;
+    padding: 0 2.5rem;
+  }
+
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .tabs {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+  }
+  .tab {
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .tab:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+  .tab.active {
+    background: var(--accent1);
+    color: #fff;
+    border-color: var(--accent1);
+  }
+
+  /* EXAM GRID */
+  .exam-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .exam-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .exam-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 16px 16px 0 0;
+  }
+  .exam-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(79,142,247,0.3);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+  }
+
+  .card-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .card-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .card-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .card-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+  }
+  .card-full {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .card-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .card-meta {
+    display: flex; flex-wrap: wrap; gap: 0.6rem;
+    margin-bottom: 1.1rem;
+  }
+  .meta-tag {
+    display: flex; align-items: center; gap: 0.3rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+
+  .card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .card-deadline {
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+  .card-btn {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.4rem 1rem;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .card-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* COLOR THEMES PER CATEGORY */
+  .eng .exam-card::before { background: linear-gradient(90deg, var(--accent1), #7eb3ff); }
+  .eng .card-icon { background: rgba(79,142,247,0.12); }
+  .eng .card-btn { background: var(--accent1); color: #fff; }
+  .eng .card-badge { background: rgba(79,142,247,0.15); color: var(--accent1); }
+
+  .med .exam-card::before { background: linear-gradient(90deg, var(--accent3), #7aefd0); }
+  .med .card-icon { background: rgba(61,219,160,0.12); }
+  .med .card-btn { background: var(--accent3); color: #0a0e1a; }
+  .med .card-badge { background: rgba(61,219,160,0.15); color: var(--accent3); }
+
+  .law .exam-card::before { background: linear-gradient(90deg, var(--accent2), #ffe17a); }
+  .law .card-icon { background: rgba(247,201,72,0.12); }
+  .law .card-btn { background: var(--accent2); color: #0a0e1a; }
+  .law .card-badge { background: rgba(247,201,72,0.15); color: var(--accent2); }
+
+  .mgmt .exam-card::before { background: linear-gradient(90deg, var(--accent5), #d4a0ff); }
+  .mgmt .card-icon { background: rgba(176,106,247,0.12); }
+  .mgmt .card-btn { background: var(--accent5); color: #fff; }
+  .mgmt .card-badge { background: rgba(176,106,247,0.15); color: var(--accent5); }
+
+  .govt .exam-card::before { background: linear-gradient(90deg, var(--accent4), #ffabb8); }
+  .govt .card-icon { background: rgba(247,107,138,0.12); }
+  .govt .card-btn { background: var(--accent4); color: #fff; }
+  .govt .card-badge { background: rgba(247,107,138,0.15); color: var(--accent4); }
+
+  .hidden { display: none !important; }
+
+  /* TIMELINE SECTION */
+  .timeline-section {
+    position: relative; z-index: 1;
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 0 2.5rem;
+  }
+  .timeline-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+  .timeline {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .timeline-row {
+    display: grid;
+    grid-template-columns: 160px 1fr 120px 120px;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    transition: background 0.2s;
+    font-size: 0.875rem;
+  }
+  .timeline-row:hover { background: var(--surface2); }
+  .timeline-row:last-child { border-bottom: none; }
+  .timeline-row.header {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    background: var(--surface2);
+  }
+  .tl-exam { font-weight: 600; }
+  .tl-date { color: var(--muted); font-size: 0.8rem; }
+  .tl-status {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    text-align: center;
+  }
+  .status-open { background: rgba(61,219,160,0.15); color: var(--accent3); }
+  .status-soon { background: rgba(247,201,72,0.15); color: var(--accent2); }
+  .status-closed { background: rgba(107,122,153,0.15); color: var(--muted); }
+  .tl-class { color: var(--muted); font-size: 0.8rem; }
+
+  /* TIPS SECTION */
+  .tips-section {
+    position: relative; z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto 5rem;
+    padding: 0 2.5rem;
+  }
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .tip-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    transition: border-color 0.2s;
+  }
+  .tip-card:hover { border-color: rgba(255,255,255,0.12); }
+  .tip-icon { font-size: 1.6rem; margin-bottom: 0.6rem; }
+  .tip-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+  }
+  .tip-text { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  /* FOOTER */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 2rem 2.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  footer a { color: var(--accent1); text-decoration: none; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .modal {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    max-width: 580px;
+    width: 100%;
+    padding: 2rem;
+    transform: translateY(20px);
+    transition: transform 0.25s;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-close {
+    position: absolute; top: 1.25rem; right: 1.25rem;
+    background: var(--surface2);
+    border: none;
+    color: var(--muted);
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal { position: relative; }
+  .modal h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .modal-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .modal-section { margin-bottom: 1.25rem; }
+  .modal-section h3 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+  .modal-section p {
+    font-size: 0.875rem;
+    color: var(--text);
+    line-height: 1.65;
+  }
+  .modal-pills {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .modal-pill {
+    font-size: 0.78rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 6px;
+    color: var(--text);
+  }
+  .modal-links {
+    display: flex; gap: 0.75rem; margin-top: 1.5rem;
+  }
+  .modal-link {
+    flex: 1;
+    text-align: center;
+    padding: 0.7rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    color: var(--text);
+    background: var(--surface2);
+    text-decoration: none;
+    transition: border-color 0.2s;
+  }
+  .modal-link:hover { border-color: rgba(79,142,247,0.4); }
+  .modal-link.primary {
+    background: var(--accent1);
+    border-color: var(--accent1);
+    color: #fff;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { display: none; }
+    .hero { padding: 3rem 1.25rem 2rem; }
+    .section, .timeline-section, .tips-section { padding: 0 1.25rem; }
+    .stats-row { gap: 1.5rem; }
+    .timeline-row { grid-template-columns: 1fr 1fr; font-size: 0.8rem; }
+    .timeline-row.header .tl-class, .tl-class { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    Exam<span>Path</span>
+    <div class="logo-badge">CBSE</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#exams">Exams</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#tips">Prep Tips</a></li>
+  </ul>
+  <button class="nav-cta">Save Exams</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">🎯 For CBSE Class 11 & 12 Students</div>
+  <h1>Your roadmap to every<br><em>competitive exam</em> in India</h1>
+  <p>From JEE to CLAT, NEET to UPSC — explore, compare, and track all major entrance exams designed for CBSE high school students.</p>
+  <div class="hero-search">
+    <input type="text" id="searchInput" placeholder="Search exams, careers, subjects..." oninput="filterExams()">
+    <button onclick="filterExams()">🔍 Search</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num">25<span>+</span></div><div class="stat-label">Exams Listed</div></div>
+    <div class="stat"><div class="stat-num">5<span>+</span></div><div class="stat-label">Career Streams</div></div>
+    <div class="stat"><div class="stat-num">2<span>M+</span></div><div class="stat-label">Students Appear</div></div>
+    <div class="stat"><div class="stat-num">1<span>L+</span></div><div class="stat-label">Seats Available</div></div>
+  </div>
+</div>
+
+<!-- EXAM CARDS -->
+<div class="section" id="exams">
+  <div class="section-header">
+    <div class="section-title">All Competitive Exams</div>
+    <div class="tabs">
+      <button class="tab active" onclick="setTab(this,'all')">All</button>
+      <button class="tab" onclick="setTab(this,'eng')">Engineering</button>
+      <button class="tab" onclick="setTab(this,'med')">Medical</button>
+      <button class="tab" onclick="setTab(this,'law')">Law</button>
+      <button class="tab" onclick="setTab(this,'mgmt')">Management</button>
+      <button class="tab" onclick="setTab(this,'govt')">Govt / Defence</button>
+    </div>
+  </div>
+
+  <div class="exam-grid" id="examGrid">
+
+    <!-- ENGINEERING -->
+    <div class="exam-card eng" data-cat="eng" data-delay="0" onclick="openModal('jee-main')">
+      <div class="card-top">
+        <div class="card-icon">⚙️</div>
+        <div class="card-badge">Engineering</div>
+      </div>
+      <div class="card-name">JEE Main</div>
+      <div class="card-full">Joint Entrance Examination — Main</div>
+      <div class="card-desc">Gateway to NITs, IIITs and GFTIs. Conducted twice a year by NTA in CBT mode.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 PCM</span>
+        <span class="meta-tag">📅 Jan & Apr</span>
+        <span class="meta-tag">🧪 Physics · Chem · Math</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent3)">🟢 Registration Open</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="exam-card eng" data-cat="eng" onclick="openModal('jee-adv')">
+      <div class="card-top">
+        <div class="card-icon">🏆</div>
+        <div class="card-badge">Engineering</div>
+      </div>
+      <div class="card-name">JEE Advanced</div>
+      <div class="card-full">Joint Entrance Examination — Advanced</div>
+      <div class="card-desc">For admission to the 23 IITs. Top 2.5 lakh JEE Main qualifiers are eligible.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 PCM</span>
+        <span class="meta-tag">📅 May</span>
+        <span class="meta-tag">🎯 IITs Only</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent2)">🟡 Opens after JEE Main</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="exam-card eng" data-cat="eng" onclick="openModal('bitsat')">
+      <div class="card-top">
+        <div class="card-icon">💡</div>
+        <div class="card-badge">Engineering</div>
+      </div>
+      <div class="card-name">BITSAT</div>
+      <div class="card-full">BITS Admission Test</div>
+      <div class="card-desc">For BITS Pilani, Goa and Hyderabad campuses. Online test with English proficiency section.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 PCM</span>
+        <span class="meta-tag">📅 May–Jun</span>
+        <span class="meta-tag">⏱ 3 hours</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent3)">🟢 Open</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="exam-card eng" data-cat="eng" onclick="openModal('viteee')">
+      <div class="card-top">
+        <div class="card-icon">🔬</div>
+        <div class="card-badge">Engineering</div>
+      </div>
+      <div class="card-name">VITEEE</div>
+      <div class="card-full">VIT Engineering Entrance Exam</div>
+      <div class="card-desc">Admission to VIT campuses across India. CBT with PCM / PCMB options.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 PCM</span>
+        <span class="meta-tag">📅 Apr</span>
+        <span class="meta-tag">🏫 VIT Univ</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent3)">🟢 Open</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="exam-card eng" data-cat="eng" onclick="openModal('mhtcet')">
+      <div class="card-top">
+        <div class="card-icon">🗺️</div>
+        <div class="card-badge">Engineering</div>
+      </div>
+      <div class="card-name">MHT-CET</div>
+      <div class="card-full">Maharashtra Common Entrance Test</div>
+      <div class="card-desc">State-level entrance for Maharashtra engineering and pharmacy colleges.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 PCM</span>
+        <span class="meta-tag">📅 Apr–May</span>
+        <span class="meta-tag">🏛️ Maharashtra</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent2)">🟡 Coming Soon</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <!-- MEDICAL -->
+    <div class="exam-card med" data-cat="med" onclick="openModal('neet')">
+      <div class="card-top">
+        <div class="card-icon">🩺</div>
+        <div class="card-badge">Medical</div>
+      </div>
+      <div class="card-name">NEET-UG</div>
+      <div class="card-full">National Eligibility cum Entrance Test</div>
+      <div class="card-desc">The single entrance exam for MBBS, BDS, BAMS and BHMS courses across India.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 PCB</span>
+        <span class="meta-tag">📅 May</span>
+        <span class="meta-tag">🏥 Medical</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent3)">🟢 Registration Open</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="exam-card med" data-cat="med" onclick="openModal('aiims')">
+      <div class="card-top">
+        <div class="card-icon">🏥</div>
+        <div class="card-badge">Medical</div>
+      </div>
+      <div class="card-name">AIIMS</div>
+      <div class="card-full">All India Institute of Medical Sciences</div>
+      <div class="card-desc">NEET-UG score is now used for AIIMS. Separate counselling for the 19 AIIMS institutes.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 PCB</span>
+        <span class="meta-tag">📅 Through NEET</span>
+        <span class="meta-tag">🎯 Premier Institute</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent2)">🟡 Via NEET</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="exam-card med" data-cat="med" onclick="openModal('jipmer')">
+      <div class="card-top">
+        <div class="card-icon">💊</div>
+        <div class="card-badge">Medical</div>
+      </div>
+      <div class="card-name">JIPMER</div>
+      <div class="card-full">Jawaharlal Inst. of Postgraduate Med. Ed. & Research</div>
+      <div class="card-desc">Prestigious medical institute in Puducherry. Admissions via NEET merit list.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 PCB</span>
+        <span class="meta-tag">📅 Via NEET</span>
+        <span class="meta-tag">🏛️ Puducherry</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent2)">🟡 Via NEET</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <!-- LAW -->
+    <div class="exam-card law" data-cat="law" onclick="openModal('clat')">
+      <div class="card-top">
+        <div class="card-icon">⚖️</div>
+        <div class="card-badge">Law</div>
+      </div>
+      <div class="card-name">CLAT</div>
+      <div class="card-full">Common Law Admission Test</div>
+      <div class="card-desc">Entry to 22 NLUs across India. One of the most prestigious law entrance exams.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 Any Stream</span>
+        <span class="meta-tag">📅 Dec</span>
+        <span class="meta-tag">⚖️ NLUs</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent3)">🟢 Open</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="exam-card law" data-cat="law" onclick="openModal('ailet')">
+      <div class="card-top">
+        <div class="card-icon">🏛️</div>
+        <div class="card-badge">Law</div>
+      </div>
+      <div class="card-name">AILET</div>
+      <div class="card-full">All India Law Entrance Test</div>
+      <div class="card-desc">NLU Delhi's independent entrance exam for their BA LLB programme.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 Any Stream</span>
+        <span class="meta-tag">📅 Dec</span>
+        <span class="meta-tag">🏫 NLU Delhi</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent3)">🟢 Open</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="exam-card law" data-cat="law" onclick="openModal('lsat')">
+      <div class="card-top">
+        <div class="card-icon">📜</div>
+        <div class="card-badge">Law</div>
+      </div>
+      <div class="card-name">LSAT India</div>
+      <div class="card-full">Law School Admission Test — India</div>
+      <div class="card-desc">Accepted by 75+ law schools in India including Jindal Global Law School.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 Any Stream</span>
+        <span class="meta-tag">📅 Jan–Jun</span>
+        <span class="meta-tag">🌐 75+ Colleges</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent3)">🟢 Open</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <!-- MANAGEMENT -->
+    <div class="exam-card mgmt" data-cat="mgmt" onclick="openModal('ipmat')">
+      <div class="card-top">
+        <div class="card-icon">📊</div>
+        <div class="card-badge">Management</div>
+      </div>
+      <div class="card-name">IPMAT</div>
+      <div class="card-full">Integrated Programme in Management Aptitude Test</div>
+      <div class="card-desc">5-year IPM at IIM Indore, Rohtak & Ranchi. Combines BBA + MBA in one programme.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 Any Stream</span>
+        <span class="meta-tag">📅 May</span>
+        <span class="meta-tag">🎓 IIMs</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent2)">🟡 Coming Soon</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="exam-card mgmt" data-cat="mgmt" onclick="openModal('nmims')">
+      <div class="card-top">
+        <div class="card-icon">💼</div>
+        <div class="card-badge">Management</div>
+      </div>
+      <div class="card-name">NPAT</div>
+      <div class="card-full">NMIMS Programmes After Twelfth</div>
+      <div class="card-desc">Entry to NMIMS BBA, BBA Tech, BSc Finance, B.Com programmes.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 Any Stream</span>
+        <span class="meta-tag">📅 Feb–Apr</span>
+        <span class="meta-tag">🏫 NMIMS</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent3)">🟢 Open</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="exam-card mgmt" data-cat="mgmt" onclick="openModal('du-jat')">
+      <div class="card-top">
+        <div class="card-icon">🏙️</div>
+        <div class="card-badge">Management</div>
+      </div>
+      <div class="card-name">DU JAT</div>
+      <div class="card-full">Delhi University Joint Admission Test</div>
+      <div class="card-desc">For BMS, B.Com (Hons), BA Economics at top DU colleges like SRCC, Hindu.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 Commerce / Any</span>
+        <span class="meta-tag">📅 Jun</span>
+        <span class="meta-tag">🏛️ DU Colleges</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent2)">🟡 Coming Soon</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <!-- GOVT / DEFENCE -->
+    <div class="exam-card govt" data-cat="govt" onclick="openModal('nda')">
+      <div class="card-top">
+        <div class="card-icon">🪖</div>
+        <div class="card-badge">Defence</div>
+      </div>
+      <div class="card-name">NDA</div>
+      <div class="card-full">National Defence Academy</div>
+      <div class="card-desc">UPSC exam for Indian Army, Navy and Air Force after Class 12. Two attempts per year.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 PCM (IAF/Navy)</span>
+        <span class="meta-tag">📅 Apr & Sep</span>
+        <span class="meta-tag">👮 UPSC</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent3)">🟢 Open</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="exam-card govt" data-cat="govt" onclick="openModal('grb')">
+      <div class="card-top">
+        <div class="card-icon">⚓</div>
+        <div class="card-badge">Defence</div>
+      </div>
+      <div class="card-name">Navy MR / AA</div>
+      <div class="card-full">Indian Navy Matric Recruit / Sailor</div>
+      <div class="card-desc">Indian Navy recruitment for Matric Recruit and Agniveer AA scheme after Class 12.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 Science</span>
+        <span class="meta-tag">📅 Year Round</span>
+        <span class="meta-tag">⚓ Indian Navy</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent2)">🟡 Check Notification</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="exam-card govt" data-cat="govt" onclick="openModal('kvs')">
+      <div class="card-top">
+        <div class="card-icon">🎖️</div>
+        <div class="card-badge">Govt Service</div>
+      </div>
+      <div class="card-name">UPSC CDS</div>
+      <div class="card-full">Combined Defence Services Exam</div>
+      <div class="card-desc">For IMA, INA, AFA, OTA after graduation. Start preparing from Class 12 itself.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Graduation (start prep now)</span>
+        <span class="meta-tag">📅 Feb & Nov</span>
+        <span class="meta-tag">🪖 UPSC</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--muted)">⬜ After Graduation</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="exam-card govt" data-cat="govt" onclick="openModal('ssc')">
+      <div class="card-top">
+        <div class="card-icon">🏦</div>
+        <div class="card-badge">Govt Service</div>
+      </div>
+      <div class="card-name">SSC CHSL</div>
+      <div class="card-full">Staff Selection Commission — Combined Higher Secondary</div>
+      <div class="card-desc">Central govt jobs (LDC, DEO, PA, SA) open to Class 12 pass students.</div>
+      <div class="card-meta">
+        <span class="meta-tag">📚 Class 12 Any Stream</span>
+        <span class="meta-tag">📅 Dec–Feb</span>
+        <span class="meta-tag">🏛️ Central Govt</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-deadline" style="color:var(--accent3)">🟢 Open</span>
+        <button class="card-btn">View Details</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TIMELINE TABLE -->
+<div class="timeline-section" id="timeline">
+  <div class="timeline-title">📅 Upcoming Exam Calendar 2025–26</div>
+  <div class="timeline">
+    <div class="timeline-row header">
+      <div>Exam</div>
+      <div>Important Dates</div>
+      <div>Status</div>
+      <div class="tl-class">Eligible Class</div>
+    </div>
+    <div class="timeline-row">
+      <div class="tl-exam">JEE Main (Ses. 1)</div>
+      <div class="tl-date">Form: Nov | Exam: Jan 22–31</div>
+      <div><span class="tl-status status-open">Open</span></div>
+      <div class="tl-class">Class 12 PCM</div>
+    </div>
+    <div class="timeline-row">
+      <div class="tl-exam">NEET-UG</div>
+      <div class="tl-date">Form: Feb | Exam: May 4</div>
+      <div><span class="tl-status status-open">Open</span></div>
+      <div class="tl-class">Class 12 PCB</div>
+    </div>
+    <div class="timeline-row">
+      <div class="tl-exam">CLAT 2026</div>
+      <div class="tl-date">Form: Jul | Exam: Dec</div>
+      <div><span class="tl-status status-soon">Coming</span></div>
+      <div class="tl-class">Class 12 Any</div>
+    </div>
+    <div class="timeline-row">
+      <div class="tl-exam">BITSAT</div>
+      <div class="tl-date">Form: Jan | Exam: May–Jun</div>
+      <div><span class="tl-status status-open">Open</span></div>
+      <div class="tl-class">Class 12 PCM</div>
+    </div>
+    <div class="timeline-row">
+      <div class="tl-exam">NDA I</div>
+      <div class="tl-date">Form: Jan | Exam: Apr</div>
+      <div><span class="tl-status status-open">Open</span></div>
+      <div class="tl-class">Class 12 Any</div>
+    </div>
+    <div class="timeline-row">
+      <div class="tl-exam">IPMAT</div>
+      <div class="tl-date">Form: Mar | Exam: May</div>
+      <div><span class="tl-status status-soon">Coming</span></div>
+      <div class="tl-class">Class 12 Any</div>
+    </div>
+    <div class="timeline-row">
+      <div class="tl-exam">JEE Advanced</div>
+      <div class="tl-date">Form: Apr | Exam: May</div>
+      <div><span class="tl-status status-soon">Coming</span></div>
+      <div class="tl-class">Class 12 PCM</div>
+    </div>
+    <div class="timeline-row">
+      <div class="tl-exam">SSC CHSL</div>
+      <div class="tl-date">Form: Dec | Exam: Mar</div>
+      <div><span class="tl-status status-closed">Closed</span></div>
+      <div class="tl-class">Class 12 Any</div>
+    </div>
+  </div>
+</div>
+
+<!-- TIPS -->
+<div class="tips-section" id="tips">
+  <div class="timeline-title">💡 Smart Preparation Tips</div>
+  <div class="tips-grid">
+    <div class="tip-card">
+      <div class="tip-icon">🗓️</div>
+      <div class="tip-title">Start in Class 11</div>
+      <div class="tip-text">Most competitive exams test Class 11 + 12 content. Begin your competitive prep alongside board classes to get the edge.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">📋</div>
+      <div class="tip-title">Know the Syllabus</div>
+      <div class="tip-text">CBSE syllabus overlaps significantly with JEE Main, NEET, and CLAT. Don't treat boards and entrance exams as separate.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">📝</div>
+      <div class="tip-title">Mock Tests Are Key</div>
+      <div class="tip-text">Practice full-length mock tests under timed conditions. Time management is as important as knowledge in competitive exams.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🎯</div>
+      <div class="tip-title">Choose Your Stream Early</div>
+      <div class="tip-text">Decide by Class 11 whether you're targeting engineering, medicine, law, or management. Each path requires different prep strategies.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">📱</div>
+      <div class="tip-title">Use Official Websites</div>
+      <div class="tip-text">Always get exam dates, forms and syllabi from official NTA, NLU Consortium or SSC websites. Avoid misinformation from third-party sites.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🧠</div>
+      <div class="tip-title">Conceptual > Rote</div>
+      <div class="tip-text">Competitive exams test application of concepts, not memorisation. Focus on understanding the "why" behind every topic.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Made for CBSE Students &nbsp;·&nbsp; Data is indicative — always verify from <a href="#">official exam websites</a> &nbsp;·&nbsp; ExamPath 2025
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2 id="mTitle">Exam</h2>
+    <div class="modal-sub" id="mSub"></div>
+    <div class="modal-section"><h3>About</h3><p id="mAbout"></p></div>
+    <div class="modal-section"><h3>Eligibility</h3><p id="mElig"></p></div>
+    <div class="modal-section"><h3>Exam Pattern</h3><p id="mPattern"></p></div>
+    <div class="modal-section"><h3>Key Subjects / Sections</h3><div class="modal-pills" id="mSubjects"></div></div>
+    <div class="modal-section"><h3>Approximate Dates</h3><p id="mDates"></p></div>
+    <div class="modal-links">
+      <a class="modal-link" id="mLearnMore" href="#" target="_blank">📚 Resources</a>
+      <a class="modal-link primary" id="mOfficial" href="#" target="_blank">🌐 Official Website</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const EXAMS = {
+  'jee-main': {
+    title: 'JEE Main',
+    sub: 'Joint Entrance Examination — Main | Conducted by NTA',
+    about: 'JEE Main is the primary engineering entrance exam in India, conducted by NTA (National Testing Agency). It serves as the qualifying exam for JEE Advanced and is the direct admission test for NITs, IIITs, and GFTIs with ~31,000 seats.',
+    elig: 'Class 12 pass or appearing with PCM. General category: 75% minimum marks (65% for SC/ST). Maximum 3 consecutive attempts.',
+    pattern: '90 questions — Physics (30), Chemistry (30), Math (30). Mix of MCQs and Numerical value questions. Duration: 3 hours. Negative marking: -1 for MCQs, no negative for numericals.',
+    subjects: ['Physics', 'Chemistry', 'Mathematics', 'MCQ + Numericals', '300 Marks'],
+    dates: 'Session 1: January (form in Nov). Session 2: April (form in Feb). Results announced within 2–3 weeks.',
+    official: 'https://jeemain.nta.nic.in',
+    resources: 'https://www.khanacademy.org'
+  },
+  'jee-adv': {
+    title: 'JEE Advanced',
+    sub: 'Joint Entrance Examination — Advanced | IIT Bombay (2025)',
+    about: 'JEE Advanced is the gateway to 23 IITs. It is one of the most challenging undergraduate entrance exams in the world. Only the top 2.5 lakh students who qualify JEE Main Paper 1 can appear.',
+    elig: 'Top 2.5 lakh JEE Main Paper 1 qualifiers. Class 12 first attempt in 2024 or 2025. Maximum 2 attempts in consecutive years.',
+    pattern: '2 papers of 3 hours each. Questions include single correct, multiple correct, integer type, and matrix-match. Partial marking applies. Total ~360 marks.',
+    subjects: ['Physics', 'Chemistry', 'Mathematics', 'Multi-correct MCQ', 'Integer Type'],
+    dates: 'Typically in May–June. Registration opens 1 week after JEE Main Session 2 results. Results in June.',
+    official: 'https://jeeadv.ac.in',
+    resources: 'https://www.iitjee.ac.in'
+  },
+  'neet': {
+    title: 'NEET-UG',
+    sub: 'National Eligibility cum Entrance Test | Conducted by NTA',
+    about: 'NEET-UG is the single national level entrance test for MBBS, BDS, BAMS, BSMS, BUMS, BHMS admissions in India. Over 20 lakh students appear annually for approximately 1.08 lakh MBBS seats.',
+    elig: 'Class 12 with PCB (Physics, Chemistry, Biology). Minimum 50% in PCB (40% for SC/ST/OBC). Age: 17–25 years (general).',
+    pattern: '180 questions — Physics (45), Chemistry (45), Botany (45), Zoology (45). All MCQs. Duration: 3 hours 20 minutes. +4 for correct, -1 for wrong. Total: 720 marks.',
+    subjects: ['Physics', 'Chemistry', 'Botany', 'Zoology', '720 Marks', 'Pen & Paper'],
+    dates: 'Form: February–March. Exam: First Sunday of May. Results: June. Counselling: July onwards.',
+    official: 'https://neet.nta.nic.in',
+    resources: 'https://ncert.nic.in'
+  },
+  'bitsat': {
+    title: 'BITSAT',
+    sub: 'BITS Admission Test | BITS Pilani',
+    about: 'BITSAT is conducted by BITS Pilani for admission to its Pilani, Goa and Hyderabad campuses. The exam is fully online (CBT) and uniquely includes a 12-question English Proficiency + Logical Reasoning section.',
+    elig: 'Class 12 with PCM. Minimum 75% in PCM aggregate (PCB for Pharmacy). 12th first division required.',
+    pattern: '130 questions — Physics (35), Chemistry (40), Math/Biology (45), English (10). Duration: 3 hours. +3 correct, -1 wrong. Bonus questions possible if all 130 attempted.',
+    subjects: ['Physics', 'Chemistry', 'Mathematics', 'English', 'Logical Reasoning', '390 Marks'],
+    dates: 'Registration: January–February. Test window: May–June (slot booking). Results: June.',
+    official: 'https://www.bitsadmission.com',
+    resources: 'https://www.bits-pilani.ac.in'
+  },
+  'clat': {
+    title: 'CLAT',
+    sub: 'Common Law Admission Test | Consortium of NLUs',
+    about: 'CLAT is conducted by the Consortium of NLUs for admission to 22 National Law Universities across India offering BA LLB (5 year) programmes. NLU Bangalore, Hyderabad and Kolkata are top rankers.',
+    elig: 'Class 12 pass or appearing in any stream. Minimum 45% aggregate (40% for SC/ST). No age bar.',
+    pattern: '120 questions from 5 sections — English (28–32), Current Affairs & GK (35–39), Legal Reasoning (35–39), Logical Reasoning (28–32), Quantitative Techniques (13–17). Duration: 2 hours.',
+    subjects: ['English', 'Current Affairs', 'Legal Reasoning', 'Logical Reasoning', 'Quant', '120 Marks'],
+    dates: 'Form: July–November. Exam: December (last Sunday). Results: January. Counselling: Feb–March.',
+    official: 'https://consortiumofnlus.ac.in',
+    resources: 'https://lawschoolsindelhi.in'
+  },
+  'nda': {
+    title: 'NDA',
+    sub: 'National Defence Academy | Conducted by UPSC',
+    about: 'NDA is conducted by UPSC twice a year for admission to the Army, Navy and Air Force wings of the National Defence Academy. It is the most prestigious entry route to the Armed Forces after Class 12.',
+    elig: 'Class 12 pass or appearing. For Army: any stream. For Navy/Air Force: Class 12 with PCM. Age: 16.5–19.5 years. Only unmarried males & females (from 2023).',
+    pattern: 'Written exam: Math (300 marks, 120 Qs) + GAT (600 marks, 150 Qs). SSB Interview: 900 marks. Total: 1800 marks. Duration: Math 2.5 hrs, GAT 2.5 hrs.',
+    subjects: ['Mathematics', 'English', 'General Science', 'History', 'Geography', 'Current Affairs'],
+    dates: 'NDA I: Form Jan, Exam Apr. NDA II: Form Jun, Exam Sep. SSB interviews: Jun–Aug and Nov–Jan.',
+    official: 'https://upsc.gov.in',
+    resources: 'https://www.joinindianarmy.nic.in'
+  },
+  'ipmat': {
+    title: 'IPMAT',
+    sub: 'Integrated Programme in Management Aptitude Test | IIM Indore',
+    about: 'IPMAT offers a 5-year integrated BA + MBA / BBA + MBA programme at IIM Indore, IIM Rohtak and IIM Ranchi directly after Class 12, eliminating the need for a separate MBA entrance after graduation.',
+    elig: 'Class 12 in any stream. Minimum 60% in Class 10 and Class 12 (55% for SC/ST/PwD). Age: Under 20 years.',
+    pattern: 'IIM Indore: Quantitative Ability (MCQ + Short Answer) + Verbal Ability. Duration: 2 hours. IIM Rohtak also includes Logical Reasoning and Data Interpretation.',
+    subjects: ['Quantitative Ability', 'Verbal Ability', 'Logical Reasoning', 'Data Interpretation'],
+    dates: 'Registration: February–March. Exam: May. PI (Personal Interview): June. Results: July.',
+    official: 'https://www.iimidr.ac.in',
+    resources: 'https://www.iimrohtak.ac.in'
+  },
+  'ailet': {
+    title: 'AILET',
+    sub: 'All India Law Entrance Test | National Law University Delhi',
+    about: 'AILET is the independent entrance test for NLU Delhi (one of the most coveted law schools in India). Only 110 seats are available in BA LLB, making it extremely competitive.',
+    elig: 'Class 12 in any stream with 45% aggregate. Age: No bar. Appearing students can also apply.',
+    pattern: '100 questions — English (35), Current Affairs & GK (35), Reasoning (30). Duration: 1.5 hours. No negative marking. Total: 100 marks.',
+    subjects: ['English', 'Current Affairs', 'Reasoning', '100 Marks'],
+    dates: 'Form: September–November. Exam: December. Results: January. Counselling: February.',
+    official: 'https://nludelhi.ac.in',
+    resources: 'https://lawschoolsindelhi.in'
+  },
+  'lsat': {
+    title: 'LSAT India',
+    sub: 'Law School Admission Test — India | Pearson VUE',
+    about: 'LSAT India is administered by Pearson VUE and accepted by 75+ law schools including Jindal Global Law School and Symbiosis Law School. It tests skills instead of rote knowledge.',
+    elig: 'Class 12 pass or appearing in any stream. No minimum marks requirement.',
+    pattern: '92 questions across 4 sections — Analytical Reasoning (2 sections), Logical Reasoning (1), Reading Comprehension (1). Duration: 2 hours 20 minutes.',
+    subjects: ['Analytical Reasoning', 'Logical Reasoning', 'Reading Comprehension'],
+    dates: 'Form: November. Exam: January–June (multiple windows). Results: 3 weeks after exam.',
+    official: 'https://lsatindia.in',
+    resources: 'https://www.jgu.edu.in/jgls'
+  },
+  'jipmer': {
+    title: 'JIPMER',
+    sub: 'Jawaharlal Institute of Postgraduate Medical Education & Research',
+    about: 'JIPMER Puducherry is a centrally funded institute accepting NEET-UG scores for MBBS admissions. It has its own counselling separate from MCC. Known for affordable fees and excellent clinical training.',
+    elig: 'Valid NEET-UG score. Class 12 with PCB (minimum 60% for general). Age 17+.',
+    pattern: 'Admission through NEET-UG merit list followed by JIPMER-specific counselling round.',
+    subjects: ['Physics', 'Chemistry', 'Biology', 'Admission via NEET Score'],
+    dates: 'Counselling: After NEET results (June–July). Separate seat matrix from MCC counselling.',
+    official: 'https://jipmer.edu.in',
+    resources: 'https://mcc.nic.in'
+  },
+  'aiims': {
+    title: 'AIIMS',
+    sub: 'All India Institutes of Medical Sciences — 19 campuses',
+    about: 'AIIMS institutes are the most prestigious medical colleges in India. Since 2020, admissions to all 19 AIIMS are through NEET-UG scores followed by dedicated AIIMS counselling by MCC.',
+    elig: 'Valid NEET-UG score with Class 12 PCB. Top NEET ranks required for AIIMS New Delhi (typically top 100–200).',
+    pattern: 'No separate exam. Admission fully based on NEET-UG score + MCC counselling.',
+    subjects: ['Physics', 'Chemistry', 'Biology', 'Admission via NEET', 'MCC Counselling'],
+    dates: 'Counselling: July–August, along with MCC medical counselling rounds.',
+    official: 'https://aiimsexams.ac.in',
+    resources: 'https://mcc.nic.in'
+  },
+  'viteee': {
+    title: 'VITEEE',
+    sub: 'VIT Engineering Entrance Examination | VIT University',
+    about: 'VITEEE is conducted by VIT University for admission to B.Tech programmes across its Vellore, Chennai, Bhopal and Amravati campuses. About 2 lakh students appear annually for ~5,000 seats.',
+    elig: 'Class 12 with PCM or PCB. Minimum 60% aggregate. Age: below 21 years.',
+    pattern: '125 questions — Physics (35), Chemistry (35), Math/Biology (40), English (5), Aptitude (10). Duration: 2.5 hours. No negative marking.',
+    subjects: ['Physics', 'Chemistry', 'Mathematics', 'English', 'Aptitude', '125 Questions'],
+    dates: 'Form: November–February. Exam: April. Slot booking opens 1 month before exam. Results: May.',
+    official: 'https://viteee.vit.ac.in',
+    resources: 'https://vit.ac.in'
+  },
+  'mhtcet': {
+    title: 'MHT-CET',
+    sub: 'Maharashtra Common Entrance Test | State CET Cell',
+    about: 'MHT-CET is the state-level entrance test for engineering, pharmacy and agriculture courses in Maharashtra. Accepted by 300+ engineering colleges in the state.',
+    elig: 'Class 12 with PCM (for engineering) or PCB (for pharmacy). Maharashtra domicile preferred for state quota.',
+    pattern: 'PCM exam: 150 questions (50 each), 90 minutes. PCB exam: 150 questions (50 each), 90 minutes. +2 correct, no negative marking.',
+    subjects: ['Physics', 'Chemistry', 'Mathematics', 'Biology', 'No Negative Marking'],
+    dates: 'Form: January–February. Exam: April–May. Results: June. CAP rounds: July–August.',
+    official: 'https://cetcell.mahacet.org',
+    resources: 'https://mahacet.org'
+  },
+  'nmims': {
+    title: 'NPAT',
+    sub: 'NMIMS Programmes After Twelfth | NMIMS University',
+    about: 'NPAT is conducted by NMIMS for BBA, BBA Tech, B.Sc Finance, B.Com Hons programmes. NMIMS is a top-ranked private university with campuses in Mumbai, Bengaluru, Hyderabad and other cities.',
+    elig: 'Class 12 in any stream. Minimum 60% aggregate. For BBA Tech: PCM preferred.',
+    pattern: '120 questions in 100 minutes — Quantitative & Numerical Ability (40), Reasoning & General Intelligence (40), Proficiency in English Language (40). No negative marking.',
+    subjects: ['Quantitative Ability', 'Reasoning', 'English', '120 Questions'],
+    dates: 'Form: January–March. Exam: April (multiple slots). Results: May. PI: June.',
+    official: 'https://npat.edu.in',
+    resources: 'https://www.nmims.edu'
+  },
+  'du-jat': {
+    title: 'DU JAT',
+    sub: 'Delhi University Joint Admission Test | University of Delhi',
+    about: 'DU JAT is for admission to BMS (Bachelor of Management Studies), BA (Hons) Business Economics, and B.Com (Hons) programmes in top Delhi University colleges like SRCC, Hindu, and Ramjas.',
+    elig: 'Class 12 pass or appearing with minimum 60% marks. Any stream (Commerce preferred for B.Com).',
+    pattern: '100 questions — Quantitative Ability (25), Reasoning & Analytical Ability (25), General English (25), Business & General Awareness (25). Duration: 2 hours. +4 correct, -1 wrong.',
+    subjects: ['Quantitative Ability', 'Reasoning', 'English', 'Business & GK', '400 Marks'],
+    dates: 'Form: May. Exam: June. Results: June–July. CSAS (DU Admission Portal) allocation: July.',
+    official: 'https://du.ac.in',
+    resources: 'https://admission.uod.ac.in'
+  },
+  'grb': {
+    title: 'Navy MR / AA',
+    sub: 'Indian Navy Sailor Entry | Agniveer Scheme',
+    about: 'The Indian Navy recruits Sailors through the Agniveer scheme. Matric Recruit (MR) and Agniveer Artificer Apprentice (AA) are two popular entries open to Class 12 passouts in Science.',
+    elig: 'Class 12 with PCM for AA entry. Age: 17–21 years. Indian citizen. Medically fit.',
+    pattern: 'Computer-based test with sections on Science (PCM), Mathematics, General Knowledge and English. Physical Fitness Test (PFT) and Medical examination follow.',
+    subjects: ['Science (PCM)', 'Mathematics', 'General Knowledge', 'English', 'PFT'],
+    dates: 'Notifications released multiple times a year on joinindiannavy.gov.in. Check regularly.',
+    official: 'https://www.joinindiannavy.gov.in',
+    resources: 'https://www.agnipathscheme.com'
+  },
+  'kvs': {
+    title: 'UPSC CDS',
+    sub: 'Combined Defence Services | UPSC',
+    about: 'CDS is held twice a year by UPSC for entry to IMA (Army), INA (Navy), AFA (Air Force), and OTA after graduation. Starting preparation in Class 12 with GK, maths and English gives a significant advantage.',
+    elig: 'Graduation required for IMA/INA/AFA. Class 12 acceptable for some courses. Age: 19–24 (varies). Unmarried male or female (OTA).',
+    pattern: 'Written test: English (100), GK (100), Elementary Math (100). Each paper 2 hours. SSB Interview: 300 marks. Total: 600 marks.',
+    subjects: ['English', 'General Knowledge', 'Elementary Mathematics', 'SSB Interview'],
+    dates: 'CDS I: Form Nov, Exam Feb. CDS II: Form May, Exam Sep. SSB: 3–5 months after written.',
+    official: 'https://upsc.gov.in',
+    resources: 'https://www.joinindianarmy.nic.in'
+  },
+  'ssc': {
+    title: 'SSC CHSL',
+    sub: 'Staff Selection Commission — Combined Higher Secondary Level',
+    about: 'SSC CHSL is a national-level exam for recruitment to central government posts like Lower Division Clerk (LDC), Data Entry Operator (DEO), Postal Assistants and Court Clerks. Directly open to Class 12 passouts.',
+    elig: 'Class 12 pass from any stream. Age: 18–27 years (relaxation for reserved categories).',
+    pattern: 'Tier 1 (CBT): 100 questions — English (25), GK (25), Quant (25), Reasoning (25). 1 hour. +2 correct, -0.5 wrong. Tier 2: Descriptive paper (100 marks). Skill test for DEO/PA posts.',
+    subjects: ['English Language', 'General Knowledge', 'Quantitative Aptitude', 'Reasoning', 'Descriptive Writing'],
+    dates: 'Notification: December. Form: December–January. Tier 1 Exam: February–March. Tier 2: June.',
+    official: 'https://ssc.nic.in',
+    resources: 'https://sscadda.com'
+  }
+};
+
+let activeTab = 'all';
+
+function setTab(el, cat) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  activeTab = cat;
+  filterExams();
+}
+
+function filterExams() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('.exam-card').forEach((card, i) => {
+    const cat = card.dataset.cat;
+    const text = card.innerText.toLowerCase();
+    const catMatch = activeTab === 'all' || cat === activeTab;
+    const searchMatch = !q || text.includes(q);
+    if (catMatch && searchMatch) {
+      card.style.display = '';
+      card.style.animationDelay = (i * 0.05) + 's';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+function openModal(id) {
+  const e = EXAMS[id];
+  if (!e) return;
+  document.getElementById('mTitle').textContent = e.title;
+  document.getElementById('mSub').textContent = e.sub;
+  document.getElementById('mAbout').textContent = e.about;
+  document.getElementById('mElig').textContent = e.elig;
+  document.getElementById('mPattern').textContent = e.pattern;
+  document.getElementById('mDates').textContent = e.dates;
+  const pillsEl = document.getElementById('mSubjects');
+  pillsEl.innerHTML = e.subjects.map(s => `<span class="modal-pill">${s}</span>`).join('');
+  document.getElementById('mOfficial').href = e.official;
+  document.getElementById('mLearnMore').href = e.resources;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+// stagger card animations on load
+document.querySelectorAll('.exam-card').forEach((card, i) => {
+  card.style.animationDelay = (i * 0.06) + 's';
+});
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
